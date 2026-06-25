@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(uuid())
+  phone         String      @unique
+  partnerCode   String?     // For linking WB/Auth (Код партнера)
+  role          String      @default("client") // 'client' | 'admin_rostov' | 'admin_mariupol'
+  balance       Float       @default(0)
+  mariupolPoint String?
+  wbLinked      Boolean     @default(false)
+  orders        Order[]
+  cartItems     CartItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model Order {
+  id              String   @id @default(uuid())
+  itemName        String
+  price           Float
+  status          String   @default("wb_transit")
+  mariupolAddress String?
+  cellNumber      String?
+  clientComment   String?
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  itemName  String
+  price     Float
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="TrackStock" />
+    <script>
+      (function () {
+        var lastTouchEndAt = 0;
+        var preventDefault = function (event) {
+          event.preventDefault();
+        };
+
+        document.addEventListener("gesturestart", preventDefault, { passive: false, capture: true });
+        document.addEventListener("gesturechange", preventDefault, { passive: false, capture: true });
+        document.addEventListener("gestureend", preventDefault, { passive: false, capture: true });
+        document.addEventListener(
+          "touchmove",
+          function (event) {
+            if (event.touches && event.touches.length > 1) {
+              event.preventDefault();
+            }
+          },
+          { passive: false, capture: true }
+        );
+        document.addEventListener(
+          "touchend",
+          function (event) {
+            var now = Date.now();
+
+            if (now - lastTouchEndAt <= 300) {
+              event.preventDefault();
+            }
+
+            lastTouchEndAt = now;
+          },
+          { passive: false, capture: true }
+        );
+        document.addEventListener("dblclick", preventDefault, { passive: false, capture: true });
+      })();
+    </script>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=4d00ddcb-be0e-420c-ba9c-5a1a8d59a02c&lang=ru_RU" type="text/javascript"></script>
+    <title>TrackStock - Доставка товаров WB</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
