@@ -1,10 +1,11 @@
 import { MapPin, ShoppingCart, Package, Smartphone, Monitor, ChevronRight, Check } from 'lucide-react';
 import { useStore } from '../store';
+import { createPortal } from 'react-dom';
 
 export default function WbAddressModal({ onClose }: { onClose: () => void }) {
   const { mariupolPoint } = useStore();
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 100, backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
       <div 
         className="modal-content animate-fade-scale" 
@@ -93,6 +94,7 @@ export default function WbAddressModal({ onClose }: { onClose: () => void }) {
           Понятно
         </button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
