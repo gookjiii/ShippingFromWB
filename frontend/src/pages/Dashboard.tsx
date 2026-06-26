@@ -3,12 +3,7 @@ import { useStore } from '../store';
 import { Search } from 'lucide-react';
 import { Navigate } from 'react-router-dom';
 import WbAddressModal from '../components/WbAddressModal';
-
-declare global {
-  interface Window {
-    ymaps: any;
-  }
-}
+import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
 
 export default function Dashboard() {
   const { user, mariupolPoint } = useStore();
@@ -21,32 +16,6 @@ export default function Dashboard() {
       setPrevPoint(mariupolPoint);
     }
   }, [mariupolPoint, prevPoint]);
-
-  useEffect(() => {
-    // Initialize Yandex Map
-    if (window.ymaps) {
-      window.ymaps.ready(() => {
-        const mapContainer = document.getElementById('yandex-map');
-        if (mapContainer && mapContainer.innerHTML === '') {
-          const map = new window.ymaps.Map('yandex-map', {
-            center: [47.097133, 37.543367], // Mariupol coordinates
-            zoom: 12,
-            controls: ['zoomControl', 'fullscreenControl']
-          });
-
-          // Add a custom placemark
-          const placemark = new window.ymaps.Placemark([47.097133, 37.543367], {
-            hintContent: 'ул. Новороссийская 2',
-            balloonContent: 'Пункт выдачи TrackStock'
-          }, {
-            preset: 'islands#violetIcon'
-          });
-
-          map.geoObjects.add(placemark);
-        }
-      });
-    }
-  }, []);
 
   if (!user) return (
     <div style={{ textAlign: 'center', padding: '100px 20px', color: 'var(--text-muted)' }}>
@@ -84,9 +53,31 @@ export default function Dashboard() {
         borderRadius: '24px', 
         overflow: 'hidden',
         border: '1px solid var(--border)',
-        position: 'relative'
+        position: 'relative',
+        background: '#e5e7eb' // Light gray placeholder background
       }}>
-        <div id="yandex-map" style={{ width: '100%', height: '100%' }}></div>
+        <YMaps query={{ apikey: '4d00ddcb-be0e-420c-ba9c-5a1a8d59a02c', lang: 'ru_RU' }}>
+          <Map 
+            defaultState={{ 
+              center: [47.097133, 37.543367], 
+              zoom: 12,
+              controls: ['zoomControl', 'fullscreenControl']
+            }} 
+            width="100%" 
+            height="100%"
+          >
+            <Placemark 
+              geometry={[47.097133, 37.543367]} 
+              properties={{
+                hintContent: 'ул. Новороссийская 2',
+                balloonContent: 'Пункт выдачи TrackStock'
+              }}
+              options={{
+                preset: 'islands#violetIcon'
+              }}
+            />
+          </Map>
+        </YMaps>
       </div>
 
       {showModal && <WbAddressModal onClose={() => setShowModal(false)} />}
