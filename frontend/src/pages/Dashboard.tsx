@@ -56,7 +56,7 @@ export default function Dashboard() {
         position: 'relative',
         background: '#e5e7eb' // Light gray placeholder background
       }}>
-        <YMaps query={{ apikey: '4d00ddcb-be0e-420c-ba9c-5a1a8d59a02c', lang: 'ru_RU' }}>
+        <YMaps query={{ apikey: '4d00ddcb-be0e-420c-ba9c-5a1a8d59a02c', lang: 'ru_RU', load: 'package.full' }}>
           <Map 
             defaultState={{ 
               center: [47.097133, 37.543367], 
